@@ -37,6 +37,19 @@ RUN set -x \
                               "${BITBUCKET_INSTALL}/conf/server.xml" \
     && touch -d "@0"          "${BITBUCKET_INSTALL}/conf/server.xml"
 
+
+
+
+USER root
+
+# 将代理破解包加入容器
+COPY "atlassian-agent.jar" /opt/atlassian/bitbucket/
+
+# 设置启动加载代理包
+RUN echo 'export CATALINA_OPTS="-javaagent:/opt/atlassian/bitbucket/atlassian-agent.jar ${CATALINA_OPTS}"' >> /opt/atlassian/bitbucket/bin/setenv.sh
+
+
+
 # Use the default unprivileged account. This could be considered bad practice
 # on systems where multiple processes end up being executed by 'daemon' but
 # here we only ever run one process anyway.
