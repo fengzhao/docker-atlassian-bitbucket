@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM ghcr.io/fengzhao/openjdk:8-jdk-alpine-chinese-timezone
 
 # Setup useful environment variables
 ENV BITBUCKET_HOME     /var/atlassian/bitbucket
