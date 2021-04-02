@@ -94,6 +94,7 @@ COPY "atlassian-agent.jar" /opt/atlassian/bitbucket/
 
 # 设置启动加载代理包
 #RUN echo 'export JMX_OPTS="-javaagent:/opt/atlassian/bitbucket/atlassian-agent.jar ${JMX_OPTS}"' >> /opt/bitbucket/bin/set-jmx-opts.sh
+# 找到 /opt/bitbucket/bin/_start-webapp.sh 文件中以"JAVA_OPTS="开头的行，并在其后添加一句export JAVA_OPTS="-javaagent:/opt/atlassian/bitbucket/atlassian-agent.jar ${JAVA_OPTS}"
 RUN sed -i '/^JAVA_OPTS=/a     export JAVA_OPTS="-javaagent:/opt/atlassian/bitbucket/atlassian-agent.jar ${JAVA_OPTS}"'   /opt/bitbucket/bin/_start-webapp.sh
 
 
