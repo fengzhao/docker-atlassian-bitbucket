@@ -86,13 +86,24 @@ RUN apk del \
     rm -rf /tmp/* && \
     rm -rf /var/log/*
 
+
+USER root
+
+# 将代理破解包加入容器
+COPY "atlassian-agent.jar" /opt/atlassian/bitbucket/
+
+# 设置启动加载代理包
+#RUN echo 'export JMX_OPTS="-javaagent:/opt/atlassian/bitbucket/atlassian-agent.jar ${JMX_OPTS}"' >> /opt/bitbucket/bin/set-jmx-opts.sh
+RUN sed -i '/^JAVA_OPTS=/a     export JAVA_OPTS="-javaagent:/opt/atlassian/bitbucket/atlassian-agent.jar ${JAVA_OPTS}"'   /opt/bitbucket/bin/_start-webapp.sh
+
+
 USER bitbucket
 WORKDIR /var/atlassian/bitbucket
 VOLUME ["/var/atlassian/bitbucket"]
 EXPOSE 7990 7990
 EXPOSE 7999 7999
 EXPOSE 7992 7992
-COPY bin/docker-entrypoint.sh /
-COPY bin/ps_opt_p_enabled_for_alpine.sh /usr/bin/ps
+COPY docker-entrypoint.sh /
+COPY ps_opt_p_enabled_for_alpine.sh /usr/bin/ps
 ENTRYPOINT ["/sbin/tini","--","/docker-entrypoint.sh"]
 CMD ["bitbucket"]
